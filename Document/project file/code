@@ -1,0 +1,62 @@
+
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+df = pd.read_csv("ElectricCarData_Clean.csv")
+
+print("Dataset Loaded Successfully")
+print(df.head())
+
+print("\nDataset Info:")
+print(df.info())
+
+print("\nMissing Values:")
+print(df.isnull().sum())
+
+avg_range_brand = df.groupby("Brand")["Range_Km"].mean().sort_values(ascending=False)
+
+plt.figure()
+avg_range_brand.head(10).plot(kind='bar')
+plt.title("Top 10 Brands by Average Range")
+plt.xlabel("Brand")
+plt.ylabel("Average Range (Km)")
+plt.xticks(rotation=45)
+plt.tight_layout()
+plt.show()
+
+plt.figure()
+sns.scatterplot(data=df, x="PriceEuro", y="Range_Km", hue="Brand", legend=False)
+plt.title("Price vs Range")
+plt.xlabel("Price (Euro)")
+plt.ylabel("Range (Km)")
+plt.show()
+
+plt.figure()
+sns.scatterplot(data=df, x="FastCharge_KmH", y="Range_Km")
+plt.title("Fast Charging Speed vs Range")
+plt.xlabel("Fast Charge (Km per Hour)")
+plt.ylabel("Range (Km)")
+plt.show()
+
+body_style_count = df["BodyStyle"].value_counts()
+
+plt.figure()
+body_style_count.plot(kind='bar')
+plt.title("EV Body Style Distribution")
+plt.xlabel("Body Style")
+plt.ylabel("Number of Models")
+plt.show()
+
+plt.figure()
+sns.scatterplot(data=df, x="Efficiency_WhKm", y="Range_Km")
+plt.title("Efficiency vs Range")
+plt.xlabel("Efficiency (Wh/Km)")
+plt.ylabel("Range (Km)")
+plt.show()
+
+print("\nKey Insights:")
+print("Maximum Range:", df["Range_Km"].max())
+print("Average Range:", df["Range_Km"].mean())
+print("Most Expensive Car:", df.loc[df["PriceEuro"].idxmax(), "Model"])
+print("Most Efficient Car:", df.loc[df["Efficiency_WhKm"].idxmin(), "Model"])
